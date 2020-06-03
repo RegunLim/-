@@ -14,7 +14,7 @@ for song in songs:
     songNames = song.select_one('td.info > a.title.ellipsis')
     ssong = songNames.text.strip()
     rankings = song.select_one('td.number')
-    rank = rankings.text.split('\n')[0] #이게 어떤 원리로 나오는건지..?
+    rank = rankings.text.split('\n')[0] 
 
 
     print(rank, ssong, singer)
