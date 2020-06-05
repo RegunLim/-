@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+    <title>8기 임정모 4주차 숙제</title>
+
+
+    <style>
+        .product_photo {
+
+            background-image: url(https://modo-phinf.pstatic.net/20181115_107/1542267244020U11iQ_JPEG/mosaX12Gi5.jpeg?type=w1100);
+            background-position: center;
+
+            width: 1100px;
+            height: 400px;
+            margin: 50px;
+            margin-left: auto;
+            margin-right: auto;
+
+        }
+
+        .content {
+            margin-left: 550px;
+            width: 1100px;
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .price_name {
+            font-size: large;
+        }
+
+        .bootstrap {
+            margin-top: 20px;
+            margin-left: 600px;
+            margin-right: 700px;
+
+        }
+
+        .button {
+            /* width에 들어가는 숫자에 따라 위치가 바뀌는 이유는? */
+            width: 200px;
+            margin: auto;
+            margin-bottom: 30px;
+
+        }
+
+        .orders {
+            margin: auto;
+            width: 1000px;
+        }
+    </style>
+
+    <script>
+
+        // $(document).ready(function () {
+        //     alert('다 로딩됐다!');
+        // })
+
+
+        $.ajax({
+
+            type: "GET",
+            url: "https://api.manana.kr/exchange/rate.json",
+            data: {},
+            success: function (response) {
+                let value = response[1]["rate"];
+                $('#change_rate').text(value)
+            }
+        });
+
+
+
+        function register() {
+            let name = $('#korean_name').val();
+            let level = $('#level-select').val();
+            let address = $('#address_input').val();
+            let phone = $('#phone_input').val();
+
+            if (name === '') {
+                alert('이름 입력해주세요!')
+
+            } else if (level === '-- Level 선택하세요') {
+                alert('Level 선택해주세요!')
+
+            } else if (address === '') {
+                alert('주소 입력해주세요!')
+
+            } else if (phone === '') {
+                alert('전화번호 입력해주세요!')
+
+            } else {
+                // alert('Successfully Registered')
+            }
+
+
+            $.ajax({
+                type: 'POST', // 타입을 작성합니다.
+                url: '/register', // url을 작성합니다.
+                data: { KoreanName_give: name, Level_give: level, Address_give: address, PhoneNumber_give: phone }, // data를 작성합니다. },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        window.location.reload();
+                    }
+                }
+            });
+
+        }
+
+
+
+        function listing() {
+            // 1. 리뷰 목록을 서버에 요청하기
+            // 2. 요청 성공 여부 확인하기
+            // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+            $.ajax({
+                type: "GET",
+                url: "/register",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+
+                        let RegisteredOne = response['all_registrations']
+                        for (let i = 0; i < RegisteredOne.length; i++) {
+                            let KoreanName = RegisteredOne[i]['KoreanName'];
+                            let Level = RegisteredOne[i]['Level'];
+                            let Address = RegisteredOne[i]['Address'];
+                            let PhoneNumber = RegisteredOne[i]['PhoneNumber'];
+
+
+                            let temp_html = `
+                                tr>
+                                    <td>${KoreanName}</td>
+                                    <td>${Level}</td>
+                                    <td>${Address}</td>
+                                    <td>${PhoneNumber}</td>
+                                </tr>`;
+
+                            $('#orders-box').append(temp_html)
+                        }
+
+                    } else {
+                        alert('리뷰를 받아오지 못했습니다');
+                    }
+                }
+            });
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <div class="total">
+        <div class="product_photo">
+            <h1></h1>
+        </div>
+
+        <div class="content">
+            <h1 class='title'>프린서플 어학원 야간학교 수강신청</h1>
+            <p> </p>
+
+            <!-- p태그를 겹쳐서 해도 간격이 벌어지지 않는 이유는? -->
+            <P> </P>
+            <p> </p>
+
+
+            <h6>잘 가르치기로 소문난 영어 회화 맛집 프린서플 어학원에 직장인 반이 개설되었습니다.</h6>
+            <h6>시간이 없지만 영어로 말하고 싶은 분이시라면,</h6>
+            <h6>공부 많이 하긴 했는데 막상 말이 잘 안 나오는 분이시라면,</h6>
+            <h6>아직 영어로 말을 하기 두려운 분이시라면,</h6>
+            <h6>시작해보십시오!! 당신의 마지막 영어회화 도전!!</h6>
+            <h6>당신이 포기하지 않으셨다면, 저희도 당신을 포기하지 않겠습니다!!</h6>
+
+            <p> </p>
+            <h3>PRICE</h3>
+            <ul class="price_name">
+                <li>Departure(Level 1) : 160,000</li>
+                <li>Connections(Level 2) : 180,000</li>
+                <li>Destination(Level 3) : 200,000</li>
+            </ul>
+
+            <p>달러-원 환율: <span id="change_rate"></span>원</p>
+
+        </div>
+
+
+
+        <div class="bootstrap">
+            <!-- Korean Name, LEVEL, Address, Cell-phone Number 칸 간격을 동일하게 만들고 싶어요. -->
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Korean Name</span>
+                </div>
+                <input type="text" id="korean_name" class="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">LEVEL</label>
+                </div>
+                <select class="custom-select" id="level-select">
+                    <option selected> -- Level 선택하세요</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Address</span>
+                </div>
+                <input type="text" class="form-control" id="address_input" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Phone Number</span>
+                </div>
+                <input type="text" class="form-control" id="phone_input" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default">
+            </div>
+
+        </div>
+
+        <div class="button">
+            <button type="button" onclick="register()" class="btn btn-primary btn-lg">Register</button>
+        </div>
+
+        <div class="orders">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Korean Name</th>
+                        <th scope="col">Level</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-box">
+                    <tr>
+                        <td>임정모</td>
+                        <td>ㅇㅇㅇㅇ</td>
+                        <td>강남구 역삼동</td>
+                        <td>2950</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+
+</body>
+
+</html>
