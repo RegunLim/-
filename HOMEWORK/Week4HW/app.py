@@ -31,7 +31,8 @@ def register_confirm():
 
 @app.route('/register', methods=['GET'])
 def read_registrations():
-  registeredInformation = list(db.registration.find({},{'_id':0}))
+  registeredInformation = list(db.registration.find({},{'_id':0})) 
+                                                            # _id 값을 가져오면 돌아가지 않습니다.
   return jsonify({'result':'success', 'all_registrations': registeredInformation})
 
 
